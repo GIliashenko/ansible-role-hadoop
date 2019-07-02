@@ -1,7 +1,7 @@
 # The type of the node: slave / master / resourcemanager / nodemanager / datanode / namenode  
 hadoop_type_of_node: slave
 # Hadoop base directory to install the software
-hadoop_home: /opt/hadoop-2.X
+hadoop_home: /opt/hadoop
 # List of servers to download the hadoop code
 hadoop_mirrors: [ "http://ftpgrycap.i3m.upv.es/src/", "http://apache.rediris.es/hadoop/core/stable2/", "http://www-eu.apache.org/dist/hadoop/common/stable2/" ]
 # Hadoop version to install: latest or version num
@@ -14,3 +14,9 @@ yarn_props: {}
 users_dict: {}
 # List of slave nodes
 hadoop_slave_nodes: "{{ groups['all']|map('extract', hostvars,'ansible_hostname')|list }}"
+
+hadoop_system_user: "hadoop"
+hadoop_system_group: "hadoop"
+
+hadoop_ssh_key_private_path: ""
+hadoop_ssh_key_public: ""

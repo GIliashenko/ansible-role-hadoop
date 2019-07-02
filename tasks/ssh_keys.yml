@@ -1,0 +1,47 @@
+---
+- name: create .ssh dir for Hadoop admin
+  file:
+    path: "/home/{{ hadoop_system_user }}/.ssh/"
+    state: directory
+    owner: "{{ hadoop_system_user }}"
+    group: "{{ hadoop_system_group }}"
+    mode: 0700
+  tags:
+    - ssh
+
+- name: Deploy ssh private keys to cluster
+  copy:
+    src: "{{ hadoop_ssh_key_private_path }}"
+    dest: "/home/{{ hadoop_system_user }}/.ssh/id_rsa"
+    owner: "{{ hadoop_system_user }}"
+    group: "{{ hadoop_system_group }}"
+    mode: 0600
+  tags:
+    - ssh
+
+- name: Generate authorized keys on cluster
+  authorized_key:
+    user: "{{ hadoop_system_user }}"
+    state: present
+    key: "{{ hadoop_ssh_key_public }}"
+  tags:
+    - ssh
+
+- name: update ssh fingerprint
+  shell: "ssh-keyscan {{ item }} >> /home/{{ hadoop_system_user }}/.ssh/known_hosts"
+  with_items:
+    - "{{ [hadoop_master] }}"
+    - "{{ hadoop_slave_nodes }}"
+  tags:
+    - ssh_fingerprint
+    - ssh
+
+- name: Update owner of .ssh folder
+  file:
+    dest: "/home/{{ hadoop_system_user }}/.ssh"
+    owner: "{{ hadoop_system_user }}"
+    group: "{{ hadoop_system_group }}"
+    recurse: yes
+  tags:
+    - ssh
+    - ssh_folder

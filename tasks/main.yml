@@ -1,7 +1,11 @@
 ---
 # Add a fast check to speed reconfiguration
-- stat: path=/opt/hadoop
+- stat: path={{ hadoop_home }}
   register: hadoop_installed
+
+- include: users.yml
+
+- include: ssh_keys.yml
 
 - include: install.yml
   when: not hadoop_installed.stat.exists
