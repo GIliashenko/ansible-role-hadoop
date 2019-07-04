@@ -1,5 +1,7 @@
 ---
 # Add a fast check to speed reconfiguration
+- include: check_system.yml
+
 - stat: path={{ hadoop_home }}
   register: hadoop_installed
 
@@ -8,9 +10,11 @@
 - include: ssh_keys.yml
 
 - include: install.yml
-  when: not hadoop_installed.stat.exists
+#  when: not hadoop_installed.stat.exists
 
 - include: configure.yml
 
 - include: configure_users.yml
   when: users_dict.values()
+
+- include: post.yml

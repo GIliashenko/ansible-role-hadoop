@@ -1,18 +1,18 @@
 ---
 - name: HDFS configuration (create users dir)
-  command: {{ hadoop_home }}/bin/hdfs dfs -mkdir -p /users/
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p /users/"
 
 - name: HDFS configuration (create log dir)
-  command: {{ hadoop_home }}/bin/hdfs dfs -mkdir -p /log/
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p /log/"
 
 - name: HDFS configuration (create history dir)
-  command: {{ hadoop_home }}/bin/hdfs dfs -mkdir -p /log/history
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p /log/history"
 
 - name: HDFS configuration (set log folder rights)
-  command: {{ hadoop_home }}/bin/hdfs dfs -chmod go+w /log
+  command: "{{ hadoop_home }}/bin/hdfs dfs -chmod go+w /log"
 
 - name: HDFS configuration (set history folder rights)
-  command: {{ hadoop_home }}/bin/hdfs dfs -chmod go+w /log/history
+  command: "{{ hadoop_home }}/bin/hdfs dfs -chmod go+w /log/history"
 
 #- name: Copy hadoop environment script
 #  copy:
@@ -28,9 +28,9 @@
     force: yes
 
 - name: create HDFS homes
-  command: {{ hadoop_home }}/bin/hdfs dfs -mkdir -p /users/{{ item.value.name }}
+  command: "{{ hadoop_home }}/bin/hdfs dfs -mkdir -p /users/{{ item.value.name }}"
   with_dict: "{{ users_dict }}"
 
 - name: create HDFS homes
-  command: {{ hadoop_home }}/bin/hdfs dfs -chown {{ item.value.name }}:{{ item.value.name }} /users/{{ item.value.name }}
+  command: "{{ hadoop_home }}/bin/hdfs dfs -chown {{ item.value.name }}:{{ item.value.name }} /users/{{ item.value.name }}"
   with_dict: "{{ users_dict }}"

@@ -1,0 +1,12 @@
+- name: Update owner of Hadoop instance
+  file:
+    path: "{{ item }}"
+    owner: "{{ hadoop_system_user }}"
+    group: "{{ hadoop_system_group }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ hadoop_home }}-{{ hadoop_version }}"
+    - "{{ hadoop_home }}"
+  tags:
+    - post

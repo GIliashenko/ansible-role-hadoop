@@ -9,15 +9,21 @@
     - tar
     - gzip
     - unzip
-    - java-1.8.0-openjdk
+#    - java-1.8.0-openjdk
+  tags:
+    - install
 
 - name: Ubuntu 14 install software-properties-common
   apt: name=software-properties-common
   when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
+  tags:
+    - install
 
 - name: Ubuntu 14 install OpenJDK PPA repo
   apt_repository: repo='ppa:openjdk-r/ppa'
   when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
+  tags:
+    - install
 
 # Debian related OSs
 - name: Apt install {{ packages }}
@@ -29,12 +35,20 @@
     - tar
     - gzip
     - unzip
-    - openjdk-8-jre
+#    - openjdk-8-jre
+
+  tags:
+    - install
 
 - set_fact: hadoop_file="{{ lookup('url', 'http://www-eu.apache.org/dist/hadoop/common/stable2/', split_lines=False) | regex_search('(hadoop-)(\d\.\d\.\d)(\.tar\.gz)') }}"
   when: hadoop_version == 'latest'
+  tags:
+    - install
+
 - set_fact: hadoop_version="{{ hadoop_file | regex_search('(\d\.\d\.\d)') }}"
   when: hadoop_version == 'latest'
+  tags:
+    - install
 
 - name: "Download {{ hadoop_version }}"
   get_url: url={{ hadoop_mirrors|random }}/hadoop-{{ hadoop_version }}.tar.gz dest={{ hadoop_home }}-{{ hadoop_version }}.tar.gz force=no
@@ -42,9 +56,13 @@
   until: result is success
   retries: 5
   delay: 2
+  tags:
+    - install
 
 - name: Unarchive hadoop tgz
-  unarchive: src={{ hadoop_home }}-{{ hadoop_version }}.tar.gz dest=/opt creates={{ hadoop_home }}-{{ hadoop_version }} copy=no
+  unarchive: src={{ hadoop_home }}-{{ hadoop_version }}.tar.gz dest={{ hadoop_home.split("/")[0:-1]|join("/") }} creates={{ hadoop_home }}-{{ hadoop_version }} copy=no
+  tags:
+    - install
 
 - name: "Create {{ hadoop_home }} dir"
   file: dest={{ hadoop_home }} src={{ hadoop_home }}-{{ hadoop_version }} state=link

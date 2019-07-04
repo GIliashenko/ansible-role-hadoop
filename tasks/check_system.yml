@@ -1,0 +1,17 @@
+- name: Disable RHEL Firewall if needed
+  systemd:
+    name: firewalld
+    enabled: no
+    state: stopped
+  when: ansible_os_family == "RedHat"
+  tags:
+    - nofirewalld
+    - check_system
+
+- name: Disable SELinux
+  selinux:
+    state: disabled
+  when: ansible_os_family == "RedHat"
+  tags:
+    - noselinux
+    - check_system
