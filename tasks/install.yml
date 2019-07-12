@@ -9,7 +9,7 @@
     - tar
     - gzip
     - unzip
-#    - java-1.8.0-openjdk
+    - java-1.8.0-openjdk
   tags:
     - install
 
